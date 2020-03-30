@@ -15,7 +15,7 @@ sudo apt install curl
 ```bash
 sudo apt install mysql-server
 ```
-###### Obs.: Caso vá usar banco em outro servidor não será necessário a instalação do mysql server.
+###### Obs.: Caso use o mysql em outro servidor não será necessário a instalação do mysql server.
 **4. Dê uma senha para o usuário root do mysql**
 ```MYSQL
 sudo mysql
