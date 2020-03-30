@@ -414,3 +414,4 @@ Talvez  o tipo de ataque mais perigoso de todos, capaz de colapsar um ou vários
 5. https://blog.apiki.com/13-passos-seguranca-do-wordpress/ (acessado em 23/03/20)
 6. https://dipakgajjar.com/fix-403-forbidden-error-in-wordpress-modsecurity/ (acessado em 25/03/20)
 7. https://www.digitalocean.com/community/tutorials/como-instalar-o-wordpress-com-lamp-no-ubuntu-16-04-pt (acessado em 23/03/20)
+8. https://www.digitalocean.com/community/tutorials/how-to-install-linux-apache-mysql-php-lamp-stack-ubuntu-18-04 (acessado em 23/03/20)
