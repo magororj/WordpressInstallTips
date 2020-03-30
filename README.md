@@ -114,3 +114,149 @@ Estando tudo certo reinicie o apache
 ```
 sudo systemctl restart apache2
 ```
+
+**13. Baixe ou copie o projeto wordpress para a pasta /var/www/**
+
+Para o caso de uma instalação nova:
+```
+cd /tmp
+curl -O https://br.wordpress.org/latest-pt_BR.tar.gz 
+```
+Extraia o arquivo e mova para a pasta /www
+```
+tar xzvf latest-pt_BR.tar.gz
+sudo cp -a /tmp/wordpress/. /var/www/NOMEDOSITE
+```
+**15. Ajuste a Propriedade e permissões**
+```
+sudo chown -R ubuntu:www-data /var/www/
+sudo find /var/www/NOMEDOSITE -type d -exec chmod g+s {} \;
+```
+Ajustando permissão de escrita para o grupo para o diretório /wp-content 
+```
+sudo chmod g+w /var/www/NOMEDOSITE/wp-content
+```
+
+Como parte desse processo, daremos ao servidor web acesso de escrita a todo o conteúdo nesses dois diretórios:
+``` 
+sudo chmod -R g+w /var/www/NOMEDOSITE/wp-content/themes
+sudo chmod -R g+w /var/www/NOMEDOSITE/wp-content/plugins
+```
+
+**16. Ajuste o wp-config.php**
+```
+/var/www/NOMEDOSITE/wp-config.php
+```
+```
+. . .
+
+define('DB_NAME', 'wordpress');
+
+/** MySQL database username */
+define('DB_USER', 'wordpressuser');
+
+/** MySQL database password */
+define('DB_PASSWORD', 'password');
+
+. . .
+
+define('FS_METHOD', 'direct');
+```
+**17. Complete a instalação através da interface web**
+
+Ajuste permissões para atualizar
+Quando uma atualização se torna disponível, acesse novamente seu servidor como usuário do sudo. Temporariamente conceda ao processo do servidor web, acesso à pasta raiz inteira.
+```
+sudo chown -R www-data /var/www/html
+```
+Volte ao painel de administração do Wordpress e aplique a atualização.
+Quando tiver terminado, volte com as permissões anteriores novamente:
+```
+sudo chown -R ubuntu /var/www/html
+```
+Isso deve ser necessário apenas quando você estiver aplicando atualizações ao próprio WordPress.
+
+**18. Continue com as recomendações de segurança abaixo.** 
+
+## Principais Recomendações de Segurança ##
+
+**1. Utilizar a versão mais recente do PHP.**
+
+A partir da  versão 7 do PHP somente os Branch com até dois anos terão suporte em atualização de bugs e segurança, por exemplo a versão 7.3 lançada em dezembro de 2018 terá suporte de segurança até dezembro de 2021.
+
+**2. Usar nomes de usuários e senhas inteligentes**
+
+Utilizar logins e senhas únicas para cada site além das ferramentas de criação de logins fortes que o próprio Wordpress disponibiliza. 
+
+**3. Atualize sempre as versões mais recentes do Wordpress, Plugins e temas** 
+
+Sempre que for utilizar um plugin ou tema que não seja do repositório do Wordpress, utilizar uma ferramenta on-line de scaneamento de malware como o [Virus Total](https://www.virustotal.com/gui/home/upload).
+
+**4. Bloquear a área de administração do Wordpress**
+
+* Utilizar um nome alternativo para o endereço de administração (wp-admin); 
+* Forçar a autenticação de dois fatores;
+* Limitar tentativas por IP;
+* Utilizar autenticação básica por htpasswd;
+* Restringir o acesso a administração somente de um IP conhecido
+
+**5. Reforce a segurança do wp-config.php**
+
+O __wp-config.php__ como o nome sugere é o principal arquivo de configuração de um sistema Wordpress, contém informações de login e banco de dados extremamente sensíveis, além das chaves de segurança que manipulam a criptografia das informações nos cookies. 
+As principais ações no que tange a segurança deste arquivo são:
+* Mover o wp-config.php da raiz do projeto, procure mantê-lo um diretório acima do diretório raiz;
+* Atualizar as chaves de segurança; sempre que necessário utilize : 
+```
+curl -s https://api.wordpress.org/secret-key/1.1/salt/
+```
+* Alterar as permissões para 600 
+
+
+**6. Utilizar plugins de segurança do Wordpress**
+
+As principais soluções :
+
+* Sucuri Security
+* iThemes Security
+* WordFence Security
+* WP fail2ban
+* SecuPress
+
+**Principais funções:** 
+
+* Gerar e forçar senhas fortes ao criar perfis de usuário
+* Forçar que as senhas expirem e sejam redefinidas regularmente
+* Registro de ações do usuário
+* Atualizações fáceis de chaves de segurança do WordPress
+* Análise de Malware
+* Autenticação de dois fatores
+* reCAPTCHAs
+* Firewalls de segurança do WordPress
+* Lista de permissões de IP
+* Lista negra de IP
+* Logs de alteração de arquivo
+* Monitorar alterações de DNS
+* Bloquear redes maliciosas
+* Ver informações WHOIS sobre visitantes
+
+>Talvez a característica mais importante e por que se deve usar um plugin de segurança no Wordpress é que a maioria utiliza um utilitário de soma de verificação (Checksums). Através da comparação com os arquivos core do Wordpress.org o Plugin varre o ambiente em busca de arquivos ou pastas  alteradas ou modificadas.  
+
+**7. Atenção especial ao banco de dados**
+
+* Atenção ao prefixo do banco  (renomeie sempre o wp_ por outro prefixo mais seguro)
+* Se possível crie um usuário de banco específico para o ambiente com permissões restritas somente aquele banco, JAMAIS use o root do banco.
+* Execute ou tenha scripts de back-up rotineiramente.
+
+**8. Permissões do servidor*
+
+As recomendações típicas para permissões são:
+
+* Todos os arquivos devem ser 644 ou 640. Exceção: o wp-config.php e o debug.log devem ser 600.
+* Todos os diretórios devem ser 755 ou 750.
+* Nenhum diretório deveria receber 777, nem mesmo fazer o upload de diretórios.
+* O melhor a fazer é restringir ao máximo as permissões dos arquivos e pastas e ir liberando apenas os casos que necessitem de permissão de escrita como a pasta Upload.
+* A sua conta de usuário (Ubuntu, por exemplo) deve ser a dona de todos os arquivos, tendo acesso de escrita a todos eles. Os arquivos que necessitem de escrita pelo Wordpress (www-data no Debian) devem estar em um grupo, também pertencente a conta de usuário utilizada no servidor.
+
+Novamente o iThemes Security possui um utilitário para verificar se as permissões no seu site estão corretas.
+
+![Permissões](https://github.com/magororj/WordpressInstallTips/blob/master/image2.png)
