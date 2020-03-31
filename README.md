@@ -19,7 +19,7 @@ sudo apt install mysql-server
 **4. Dê uma senha para o usuário root do mysql**
 ```MYSQL
 sudo mysql
-Select user,authentication_string,plugin,host FROM mysql.user;
+Select user,authentication_string,plugin,host FROM mysql.user
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
 ```
 **5. Rode o Flush Privileges para restartar a tabela de concessão do serviço mysql**
