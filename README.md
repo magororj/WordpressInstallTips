@@ -30,7 +30,7 @@ exit
 **6. Crie um banco de dados MYSQL e um USUÁRIO para o Wordpress**
 ```MYSQL 
 mysql -u root -p
-CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci
 GRANT ALL ON wordpress.* TO 'wordpressuser'@'localhost' IDENTIFIED BY 'password';
 FLUSH PRIVILEGES;
 exit 
