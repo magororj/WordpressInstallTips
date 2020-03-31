@@ -401,7 +401,7 @@ Formulários sem proteção para validação e higienização dos dados inserido
 Bloquear sempre que possível a inserção de comentários no site, se for o caso, utilizar plugins específicos para comentários.
 
 ![Esquema de ataque do tipo XSS (fonte: https://secure.wphackedhelp.com/blog/wordpress-xss-attack/)
-](https://github.com/magororj/WordpressInstallTips/blob/master/image1.png)
+](https://github.com/magororj/WordpressInstallTips/blob/master/image2.png)
 
 ### Denial of service (DoS attack)
 Talvez  o tipo de ataque mais perigoso de todos, capaz de colapsar um ou vários servidores em conjunto. Seja por motivação financeira ou ideológica, esse tipo de invasão sobrecarrega a memória dos servidores alvos ou ainda, promove o orquestramento de acessos ininterruptos a um site alvo na tentativa de derrubá-lo. 
